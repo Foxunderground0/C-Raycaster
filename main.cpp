@@ -1,6 +1,6 @@
 #include <iostream>
 #include <math.h>
-#include "kbhit.h"
+#include <SDL2/SDL.h>
 
 #define mapWidth 8
 #define mapHeight 8
@@ -72,19 +72,34 @@ void renderBuffer(){
 
 }
 
+int main(int argc, char* argv[]) {
+    SDL_Init(SDL_INIT_EVENTS);
+
+    //SDL_Window* window = SDL_CreateWindow("Hello World", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+
+    bool running = true;
+    while (running) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+                std::cout << "Hello World!" << std::endl;
+            }
+        }
+        SDL_Delay(10);
+    }
+
+    //SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
+
+/*
 int main(){
-				while (!_kbhit()) {
-								// do something while waiting for input
-				}
-
-				// read the key that was pressed
-				char ch = getchar();
-				std::cout << "You pressed the key '" << ch << "'" << std::endl;
-
-
+				
 				//while(1){
 				renderBuffer();
 				//}
 
 				return 0;
-} 
+} */
