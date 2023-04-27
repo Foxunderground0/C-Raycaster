@@ -10,7 +10,8 @@
 
 using namespace std;
 
-double posX = ((double) mapWidth/2.0)-0.52 ,posY= (double) mapHeight/2.0,phy=0.0;
+const double PI = 3.14159265358;
+double posX = ((double) mapWidth/2.0)-0.52 ,posY= (double) mapHeight/2.0,phi=0.0;
 
 int kbhit() {
 	struct timeval tv = { 0L, 0L };
@@ -30,7 +31,7 @@ int map[8][8]={{1,1,1,1,1,1,1,1}
 	,{1,1,1,1,1,1,1,1}};
 
 bool gridHasPlayer(int x, int y){
-	x = mapWidth - x;
+	//x = mapWidth - x;
 	//y = mapHeight - y;
 
 	if(((int)posX == x) && ((int)posY == y)){
@@ -39,21 +40,61 @@ bool gridHasPlayer(int x, int y){
 	return false;
 }
 
+void playerDirection(){
+	if((phi < PI/6) && (phi > -PI/6)){
+		cout << "F";
+	}
+	
+	if((phi > PI/6) && (phi < PI/3)){
+		cout << "FL";
+	}
+
+	if((phi > PI/3) && (phi < 2*(PI/3))){
+		cout << "L";
+	}
+	
+	if((phi > 2*(PI/2)) && (phi < 5*(PI/6))){
+		cout << "BL";
+	}
+
+
+        if((phi > 5*(PI/6)) && (phi > -5*(PI/6))){
+                cout << "B";
+        }
+
+        if((phi < -5*(PI/6)) && (phi > -2*(PI/2))){
+                cout << "BR";
+        }
+
+        if((phi < -2*(PI/2)) && (phi > -(PI/3))){
+                cout << "R";
+        }
+
+        if((phi < -(PI/3)) && (phi > -(PI/6))){
+                cout << "FR";
+        }
+
+}
+
 void getInput(){
 	char ch = getchar();
 	// Check for simple WASD key presses
 	if (ch == 'w') {
 		cout << "Moving up" << endl;
-		posX += 0.1;
+		posY += sin(phi);
+		posX += cos(phi);
 	} else if (ch == 'a') {
 		cout << "Moving left" << endl;
-		posY -= 0.1;
+		phi -= 0.05;
+		phi = remainder(phi,(PI * 2));
 	} else if (ch == 's') {
 		cout << "Moving down" << endl;
-		posX -= 0.1;
+		posY -= sin(phi);
+		posX -= cos(phi);
 	} else if (ch == 'd') {
 		cout << "Moving right" << endl;
-		posY += 0.1;
+		phi += 0.1;
+		phi = remainder(phi,(PI * 2));
 	} else if (ch == 'q') {
 		//break;
 	}
@@ -64,11 +105,14 @@ void drawPlayer(){
 	double highOrLow = posY - (double)((int)posY);
 
 	if(highOrLow >= 0.5){
-		cout << " " << "⣿";
+		cout << " ";
+		playerDirection();
 	} else {
-		cout << "⣿" << " ";
+		playerDirection();
+		cout << " ";
 	}
 }
+
 
 void renderBuffer(){
 	char displayBuffer[8][16]={" "};
@@ -100,7 +144,7 @@ void renderBuffer(){
 		cout << endl;
 	}
 	cout << "-----------------------" << endl;
-	cout << "posX: " << posX << " poxY: " << posY;
+	cout << "posX: " << posX << " poxY: " << posY << " phi: " << phi;
 
 }
 
