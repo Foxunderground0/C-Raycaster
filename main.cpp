@@ -8,10 +8,16 @@
 #define mapHeight 8
 #define mapSize 64
 
+#define numberOfRays 8;
+
 using namespace std;
 
+
 const double PI = 3.14159265358;
+
 double posX = ((double) mapWidth/2.0)-0.52 ,posY= (double) mapHeight/2.0,phi=0.0;
+
+int rays[] = {1,2,3,4,5,6,7,8};
 
 int kbhit() {
 	struct timeval tv = { 0L, 0L };
@@ -115,23 +121,37 @@ void drawPlayer(){
 
 
 void renderBuffer(){
-	char displayBuffer[8][16]={" "};
+	int displayBuffer[8][16]={0};
 
 	//Draw map on displayBuffer
 	for(int _ = 0; _ < 8; _++){
 		for(int __ = 0; __ < 8; __++){
 			displayBuffer[_][__] = map[_][__];
 		}
-		cout << endl;
+		//cout << endl;
 	}
 
 	//Draw player
 	//displayBuffer[posX][posY] = "⣿";
 
+
+	// Draw Rays
+	for(int _ = 0; _ < 8; _++){
+		for(int __ = 8; __ < 16; __++){
+			if((__-8) > ((9-rays[(__-8)])/2)){
+				displayBuffer[_][__] = 0;
+			} else if ((__-8) <= ((9+rays[(__-8)])/2)){
+				displayBuffer[_][__] = 1;
+				//cout << __;
+			}
+		}
+		
+	}
+
 	//Draw displayBuffer
 	for(int _ = 0; _ < 8; _++){
 		for(int __ = 0; __ < 16; __++){
-			if(!gridHasPlayer(_,__) || (_ >= 8)){
+			if(!gridHasPlayer(_,__) || (__ >= 8)){
 				if (displayBuffer[_][__]){
 					cout << "██";
 				} else {
